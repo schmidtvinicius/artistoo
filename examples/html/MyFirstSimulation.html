@@ -11,6 +11,8 @@ body{
 </style>
 
 <!-- Sourcing the cpm build -->
+<script src="./fpsmeter.min.js"></script>
+
 <script src="../../build/artistoo.js"></script>
 <script>
 "use strict"
@@ -62,17 +64,17 @@ let config = {
         T: 20,
         
         J: [[0,20], 
-            [20,300]],
+            [20,0]],
         
-        LAMBDA_V: [0,60],
-        V: [0,150],
+        LAMBDA_V: [0,50],
+        V: [0,200],
         
-        LAMBDA_P: [0,0],
-        P: [0, 50],
+        LAMBDA_P: [0,2],
+        P: [0, 180],
 
         // ActivityConstraint parameters
-        MAX_ACT : [0,40],
-        LAMBDA_ACT : [0,100],
+        MAX_ACT : [0,20],
+        LAMBDA_ACT : [0,200],
         ACT_MEAN : "geometric"
 
     },
@@ -82,6 +84,8 @@ let config = {
         NRCELLS : [40],
         
         RUNTIME: 50,
+        
+        IMGFRAMERATE: 5,
         
         // Visualization
         CANVASCOLOR : "eaecef",
@@ -127,7 +131,7 @@ function buildChannel(){ // add a channel of obstacles to the grid
     const xOffset = 0.5*field_size_x/Math.sqrt(num_obstacles), yOffset = 0.5*field_size_y/Math.sqrt(num_obstacles)
     const dx = Math.floor( this.C.extents[0]/Math.sqrt(num_obstacles))
     const dy = Math.floor( this.C.extents[1]/Math.sqrt(num_obstacles) )
-    const radius = 5
+    const radius = 4
     
     for( let x = xOffset; x < this.C.extents[0]; x+= dx ){
         for( let y = yOffset; y < this.C.extents[1]; y+= dy ){
@@ -178,8 +182,11 @@ function checkIfCellIsInObstacle( x, y ){
 
 
 function step(){
-    sim.step()
-    requestAnimationFrame( step )
+    for (let s = 0; s < config.simsettings.IMGFRAMERATE; s++) {
+        meter.tick()
+        sim.step()
+    }
+    requestAnimationFrame(step)
 }
 
 
@@ -196,6 +203,8 @@ function initialize(){
         parentElement : document.getElementById("sim")
     } )
     sim.helpClasses[ "canvas" ] = true
+    meter = new FPSMeter({left:"auto", right:"5px"})
+
     step()
 }
 
