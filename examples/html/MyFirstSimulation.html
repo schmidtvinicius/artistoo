@@ -123,14 +123,17 @@ function initializeGrid(){
 }
 
 
-let num_obstacles = 16 // should be a perfect square
+let num_obstacles = 9 // should be a perfect square
 
 function buildChannel(){ // add a channel of obstacles to the grid
     this.channelvoxels = []
+    // set the offset and the distance between the obstacles as integers
+    const xOffset = Math.floor(0.5*field_size_x/Math.sqrt(num_obstacles))
+    const yOffset = Math.floor(0.5*field_size_y/Math.sqrt(num_obstacles))
     
-    const xOffset = 0.5*field_size_x/Math.sqrt(num_obstacles), yOffset = 0.5*field_size_y/Math.sqrt(num_obstacles)
     const dx = Math.floor( this.C.extents[0]/Math.sqrt(num_obstacles))
     const dy = Math.floor( this.C.extents[1]/Math.sqrt(num_obstacles) )
+    
     const radius = 4
     
     for( let x = xOffset; x < this.C.extents[0]; x+= dx ){
